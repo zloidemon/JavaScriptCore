@@ -5,11 +5,11 @@ import CJavaScriptCore
 import JavaScriptCore
 #endif
 
-public struct JSError: Error, Equatable, CustomStringConvertible {
+public struct EmbeddedError: Error, Equatable, CustomStringConvertible {
     public var description: String
 
     init(context: JSContextRef, pointer: JSValueRef) {
-        let value = JSValue(context: context, pointer: pointer)
+        let value = EmbeddedValue(context: context, pointer: pointer)
         do {
             guard value.isObject else {
                 description = "not an object"
@@ -21,7 +21,7 @@ public struct JSError: Error, Equatable, CustomStringConvertible {
             }
             self.description = try message.toString()
         } catch {
-            self.description = "failed to convert JSError"
+            self.description = "failed to convert EmbeddedError"
         }
     }
 

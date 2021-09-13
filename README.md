@@ -1,4 +1,4 @@
-# JavaScript
+# JavaScriptCore
 
 ## Package.swift
 

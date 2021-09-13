@@ -5,14 +5,14 @@ import CJavaScriptCore
 import JavaScriptCore
 #endif
 
-@_exported import JavaScript
+@_exported import EmbeddedLanguage
 
-private var functions: [OpaquePointer: ([JSValue]) throws -> Value] = [:]
+private var functions: [OpaquePointer: ([EmbeddedValue]) throws -> Value] = [:]
 
-extension JSContext {
+extension EmbeddedContext {
     public func createFunction(
         name: String,
-        _ body: @escaping ([JSValue]) throws -> Value) throws
+        _ body: @escaping ([EmbeddedValue]) throws -> Value) throws
     {
         let function = try createFunction(name: name, callback: wrapper)
         functions[function] = body
@@ -20,7 +20,7 @@ extension JSContext {
 
     public func createFunction(
         name: String,
-        _ body: @escaping ([JSValue]) throws -> Void) throws
+        _ body: @escaping ([EmbeddedValue]) throws -> Void) throws
     {
         let function = try createFunction(name: name, callback: wrapper)
         functions[function] = { arguments in
@@ -30,7 +30,7 @@ extension JSContext {
     }
 }
 
-extension JSContext {
+extension EmbeddedContext {
     public func createFunction(
         name: String,
         _ body: @escaping () throws -> Value) throws
@@ -61,12 +61,12 @@ func wrapper(
     guard let body = functions[function] else {
         if let exception = exception {
             let error = "swift error: unregistered function"
-            exception.pointee = JSValue(string: error, in: ctx).pointer
+            exception.pointee = EmbeddedValue(string: error, in: ctx).pointer
         }
         return nil
     }
     do {
-        let arguments = [JSValue](
+        let arguments = [EmbeddedValue](
             start: arguments,
             count: argumentCount,
             in: ctx)
@@ -76,11 +76,11 @@ func wrapper(
         case .null: return JSValueMakeNull(ctx)
         case .bool(let value): return JSValueMakeBoolean(ctx, value)
         case .number(let value): return JSValueMakeNumber(ctx, value)
-        case .string(let value): return JSValue(string: value, in: ctx).pointer
+        case .string(let value): return EmbeddedValue(string: value, in: ctx).pointer
         }
     } catch {
         if let exception = exception {
-            exception.pointee = JSValue(string: "\(error)", in: ctx).pointer
+            exception.pointee = EmbeddedValue(string: "\(error)", in: ctx).pointer
         }
         return nil
     }

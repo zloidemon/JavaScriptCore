@@ -6,16 +6,16 @@ import JavaScriptCore
 #endif
 
 protocol JSValueInitializable {
-    init(from jsValue: JSValue) throws
+    init(from jsValue: EmbeddedValue) throws
 }
 
 extension String: JSValueInitializable {
-    init(from jsValue: JSValue) throws {
+    init(from jsValue: EmbeddedValue) throws {
         self = try jsValue.toString()
     }
 }
 
-public class JSValue {
+public class EmbeddedValue {
     let context: JSContextRef
     let pointer: JSValueRef
 
@@ -48,30 +48,30 @@ public class JSValue {
     }
 }
 
-extension JSValue {
+extension EmbeddedValue {
     convenience
-    public init(undefinedIn context: JSContext) {
+    public init(undefinedIn context: EmbeddedContext) {
         self.init(undefinedIn: context.context)
     }
 
     convenience
-    public init(bool: Bool, in context: JSContext) {
+    public init(bool: Bool, in context: EmbeddedContext) {
         self.init(bool: bool, in: context.context)
     }
 
     convenience
-    public init(number: Double, in context: JSContext) {
+    public init(number: Double, in context: EmbeddedContext) {
         self.init(number: number, in: context.context)
     }
 
     convenience
-    public init(string: String, in context: JSContext) {
+    public init(string: String, in context: EmbeddedContext) {
         self.init(string: string, in: context.context)
     }
 }
 
-extension JSValue {
-    subscript(_ property: String) -> JSValue? {
+extension EmbeddedValue {
+    subscript(_ property: String) -> EmbeddedValue? {
         guard isObject else {
             return nil
         }
@@ -85,12 +85,12 @@ extension JSValue {
         if exception != nil {
             return nil
         }
-        return JSValue(context: context, pointer: result!)
+        return EmbeddedValue(context: context, pointer: result!)
     }
 }
 
 
-extension JSValue {
+extension EmbeddedValue {
     public var isNull: Bool {
         return JSValueIsNull(context, pointer)
     }
@@ -116,7 +116,7 @@ extension JSValue {
     }
 }
 
-extension JSValue {
+extension EmbeddedValue {
     public func toBool() -> Bool {
         return JSValueToBoolean(context, pointer)
     }
@@ -139,22 +139,22 @@ extension JSValue {
     }
 }
 
-extension Array where Element == JSValue {
+extension Array where Element == EmbeddedValue {
     init(
         start: UnsafePointer<JSValueRef?>?,
         count: Int,
         in context: JSObjectRef
     ) {
-        var arguments = [JSValue]()
+        var arguments = [EmbeddedValue]()
         for i in 0..<count {
             let valueRef = start!.advanced(by: i).pointee!
-            arguments.append(JSValue(context: context, pointer: valueRef))
+            arguments.append(EmbeddedValue(context: context, pointer: valueRef))
         }
         self = arguments
     }
 }
 
-extension JSValue: CustomStringConvertible {
+extension EmbeddedValue: CustomStringConvertible {
     public var description: String {
         do {
             return try toString()

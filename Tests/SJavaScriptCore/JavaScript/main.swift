@@ -2,23 +2,23 @@ import Test
 @testable import SJavaScriptCore
 
 test.case("evaluate") {
-    let context = JSContext()
+    let context = EmbeddedContext()
     _ = try context.evaluate("40 + 2")
 }
 
 test.case("exception") {
-    let context = JSContext()
-    expect(throws: JSError("Can't find variable: x")) {
+    let context = EmbeddedContext()
+    expect(throws: EmbeddedError("Can't find variable: x")) {
         try context.evaluate("x()")
     }
 
-    expect(throws: JSError("Unexpected end of script")) {
+    expect(throws: EmbeddedError("Unexpected end of script")) {
         try context.evaluate("{")
     }
 }
 
 test.case("function") {
-    let context = JSContext()
+    let context = EmbeddedContext()
     try context.createFunction(name: "test") { (_) -> Value in
         return .string("success")
     }
@@ -27,7 +27,7 @@ test.case("function") {
 }
 
 test.case("closure") {
-    let context = JSContext()
+    let context = EmbeddedContext()
 
     try context.createFunction(name: "testUndefined") {
         return .undefined
@@ -61,7 +61,7 @@ test.case("closure") {
 }
 
 test.case("capture") {
-    let context = JSContext()
+    let context = EmbeddedContext()
 
     var captured = false
     try context.createFunction(name: "test") { (_) -> Value in
@@ -74,7 +74,7 @@ test.case("capture") {
 }
 
 test.case("arguments") {
-    let context = JSContext()
+    let context = EmbeddedContext()
     try context.createFunction(name: "test") { (arguments) -> Void in
         expect(arguments.count == 2)
         expect(try arguments.first?.toString() == "one")
@@ -84,7 +84,7 @@ test.case("arguments") {
 }
 
 test.case("persistent context") {
-    let context = JSContext()
+    let context = EmbeddedContext()
     try context.evaluate("result = 'success'")
     expect(try context.evaluate("result").toString() == "success")
 
@@ -97,14 +97,14 @@ test.case("persistent context") {
 
 test.case("sandbox") {
     try {
-        let context = JSContext()
+        let context = EmbeddedContext()
         try context.evaluate("test = 'hello'")
         let result = try context.evaluate("test")
         expect(try result.toString() == "hello")
     }()
 
-    let context = JSContext()
-    expect(throws: JSError("Can\'t find variable: test")) {
+    let context = EmbeddedContext()
+    expect(throws: EmbeddedError("Can\'t find variable: test")) {
         try context.evaluate("test")
     }
 }

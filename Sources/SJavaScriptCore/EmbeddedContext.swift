@@ -5,7 +5,7 @@ import CJavaScriptCore
 import JavaScriptCore
 #endif
 
-public class JSContext {
+public class EmbeddedContext {
     let group: JSContextGroupRef
     let context: JSGlobalContextRef
     var exception: JSObjectRef? = nil
@@ -33,7 +33,7 @@ public class JSContext {
     public func evaluate(
         _ script: String,
         source: String? = nil
-    ) throws -> JSValue {
+    ) throws -> EmbeddedValue {
         let file = JSStringCreateWithUTF8CString(source)
         let script = JSStringCreateWithUTF8CString(script)
         defer {
@@ -41,7 +41,7 @@ public class JSContext {
             JSStringRelease(script)
         }
         let result = try JSEvaluateScript(context, script, global, file, 0)
-        return JSValue(context: context, pointer: result)
+        return EmbeddedValue(context: context, pointer: result)
     }
 
     @discardableResult

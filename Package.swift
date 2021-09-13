@@ -9,7 +9,7 @@ let package = Package(
             targets: ["SJavaScriptCore"]),
     ],
     dependencies: [
-        .package(name: "JavaScript"),
+        .package(name: "EmbeddedLanguage"),
         .package(name: "Test"),
     ],
     targets: [
@@ -18,7 +18,7 @@ let package = Package(
             dependencies: []),
         .target(
             name: "SJavaScriptCore",
-            dependencies: ["CJavaScriptCore", "JavaScript"])
+            dependencies: ["CJavaScriptCore", "EmbeddedLanguage"])
     ]
 )
 

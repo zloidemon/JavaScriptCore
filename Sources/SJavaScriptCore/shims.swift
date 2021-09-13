@@ -12,7 +12,7 @@ public func JSValueToStringCopy(
     var exception: JSValueRef? = nil
     let result = JSValueToStringCopy(ctx, value, &exception)
     if let exception = exception {
-        throw JSError(context: ctx, pointer: exception)
+        throw EmbeddedError(context: ctx, pointer: exception)
     }
     return result!
 }
@@ -24,7 +24,7 @@ public func JSValueToNumber(
     var exception: JSValueRef? = nil
     let result = JSValueToNumber(ctx, value, &exception)
     if let exception = exception {
-        throw JSError(context: ctx, pointer: exception)
+        throw EmbeddedError(context: ctx, pointer: exception)
     }
     return result
 }
@@ -42,7 +42,7 @@ public func JSEvaluateScript(
         ctx, script, thisObject, sourceURL, startingLineNumber, &exception)
     if let exception = exception {
         // FIXME: Exited with signal code 11
-        throw JSError(context: ctx, pointer: exception)
+        throw EmbeddedError(context: ctx, pointer: exception)
     }
     return result!
 }
@@ -75,6 +75,6 @@ public func JSObjectSetProperty(
     JSObjectSetProperty(
         ctx, object, propertyName, value, attributes.rawValue, &exception)
     if let exception = exception {
-        throw JSError(context: ctx, pointer: exception)
+        throw EmbeddedError(context: ctx, pointer: exception)
     }
 }
