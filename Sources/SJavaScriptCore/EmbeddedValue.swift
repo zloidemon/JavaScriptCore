@@ -5,6 +5,8 @@ import CJavaScriptCore
 import JavaScriptCore
 #endif
 
+import EmbeddedLanguage
+
 protocol JSValueInitializable {
     init(from embeddedValue: EmbeddedValue) throws
 }
@@ -15,7 +17,7 @@ extension String: JSValueInitializable {
     }
 }
 
-public class EmbeddedValue {
+public class EmbeddedValue: EmbeddedValueProtocol {
     let context: JSContextRef
     let pointer: JSValueRef
 

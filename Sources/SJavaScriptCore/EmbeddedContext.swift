@@ -5,7 +5,10 @@ import CJavaScriptCore
 import JavaScriptCore
 #endif
 
-public class EmbeddedContext {
+import EmbeddedLanguage
+
+public class EmbeddedContext: EmbeddedContextProtocol {
+
     let group: JSContextGroupRef
     let context: JSGlobalContextRef
     var exception: JSObjectRef? = nil
