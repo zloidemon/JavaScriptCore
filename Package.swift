@@ -25,8 +25,8 @@ let package = Package(
 // MARK: - tests
 
 testTarget("SJavaScriptCore") { test in
-    test("JavaScript")
-    test("JSValue")
+    test("EmbeddedLanguage")
+    test("EmbeddedValue")
 }
 
 func testTarget(_ target: String, task: ((String) -> Void) -> Void) {

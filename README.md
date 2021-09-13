@@ -9,7 +9,7 @@
 ## Usage
 
 ```swift
-let context = JSContext()
+let context = EmbeddedContext()
 try context.evaluate("40 + 2")
 
 try context.createFunction(name: "getResult") {

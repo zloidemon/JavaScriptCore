@@ -6,12 +6,12 @@ import JavaScriptCore
 #endif
 
 protocol JSValueInitializable {
-    init(from jsValue: EmbeddedValue) throws
+    init(from embeddedValue: EmbeddedValue) throws
 }
 
 extension String: JSValueInitializable {
-    init(from jsValue: EmbeddedValue) throws {
-        self = try jsValue.toString()
+    init(from embeddedValue: EmbeddedValue) throws {
+        self = try embeddedValue.toString()
     }
 }
 
